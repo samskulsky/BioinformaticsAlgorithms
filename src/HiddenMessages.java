@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HiddenMessages {
@@ -14,6 +16,23 @@ public class HiddenMessages {
         }
 
         return count;
+    }
+
+    // Finds the most frequent k-mers in a string
+    public static String[] frequentWords(String text, int k) {
+        List<String> frequentPatterns = new ArrayList<>();
+
+        Map<String, Integer> freqMap = frequencyTable(text, k);
+
+        int max = maxMap(freqMap);
+
+        for (String pattern : freqMap.keySet()) {
+            if (freqMap.get(pattern) == max) {
+                frequentPatterns.add(pattern);
+            }
+        }
+
+        return frequentPatterns.toArray(new String[0]);
     }
 
     // Maps all k-mers in a string to the number of times they appear
