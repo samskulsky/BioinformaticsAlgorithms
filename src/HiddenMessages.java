@@ -18,6 +18,42 @@ public class HiddenMessages {
         return count;
     }
 
+    // Finds patterns forming clumps in a string
+    // A clump is a k-mer that appears at least t times in a window of size L
+    public static String[] findClumps(String text, int k, int L, int t) {
+        List<String> patterns = new ArrayList<>();
+
+        int n = text.length();
+
+        for (int i = 0; i < n - L; i++) {
+            System.out.println(i);
+            String window = text.substring(i, i + L);
+            Map<String, Integer> freqMap = frequencyTable(window, k);
+
+            for (String s : freqMap.keySet()) {
+                if (freqMap.get(s) >= t) {
+                    patterns.add(s);
+                }
+            }
+        }
+
+        patterns = removeDuplicates(patterns);
+        return patterns.toArray(new String[0]);
+    }
+
+    // Removes duplicate elements from a list of Strings
+    public static List<String> removeDuplicates(List<String> list) {
+        List<String> newList = new ArrayList<>();
+
+        for (String s : list) {
+            if (!newList.contains(s)) {
+                newList.add(s);
+            }
+        }
+
+        return newList;
+    }
+
     // Returns an array of starting positions of a pattern in a string
     public static Integer[] patternMatch(String text, String pattern) {
         List<Integer> positions = new ArrayList<>();
