@@ -18,6 +18,19 @@ public class HiddenMessages {
         return count;
     }
 
+    // Returns an array of starting positions of a pattern in a string
+    public static Integer[] patternMatch(String text, String pattern) {
+        List<Integer> positions = new ArrayList<>();
+
+        for (int i = 0; i < text.length() - pattern.length(); i++) {
+            if (text.substring(i, i + pattern.length()).equals(pattern)) {
+                positions.add(i);
+            }
+        }
+
+        return positions.toArray(new Integer[0]);
+    }
+
     // Finds the most frequent k-mers in a string
     public static String[] frequentWords(String text, int k) {
         List<String> frequentPatterns = new ArrayList<>();
