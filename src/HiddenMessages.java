@@ -58,13 +58,40 @@ public class HiddenMessages {
     public static Integer[] patternMatch(String text, String pattern) {
         List<Integer> positions = new ArrayList<>();
 
-        for (int i = 0; i < text.length() - pattern.length(); i++) {
+        for (int i = 0; i < text.length() - pattern.length() + 1; i++) {
             if (text.substring(i, i + pattern.length()).equals(pattern)) {
                 positions.add(i);
             }
         }
 
         return positions.toArray(new Integer[0]);
+    }
+
+    // Returns an array of starting positions of a pattern in a string
+    // Each pattern must have d or fewer mismatches
+    public static Integer[] approximatePatternMatch(String text, String pattern, int d) {
+        List<Integer> positions = new ArrayList<>();
+
+        for (int i = 0; i < text.length() - pattern.length() + 1; i++) {
+            if (Mutations.hammingDistance(text.substring(i, i + pattern.length()), pattern) <= d) {
+                positions.add(i);
+            }
+        }
+
+        return positions.toArray(new Integer[0]);
+    }
+
+    // The number of occurences of pattern in text with at most d mismatches
+    public static int count(String text, String pattern, int d) {
+        int count = 0;
+
+        for (int i = 0; i < text.length() - pattern.length() + 1; i++) {
+            if (Mutations.hammingDistance(text.substring(i, i + pattern.length()), pattern) <= d) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     // Finds the most frequent k-mers in a string
