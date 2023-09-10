@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +84,7 @@ public class HiddenMessages {
     }
 
     // The number of occurences of pattern in text with at most d mismatches
-    public static int count(String text, String pattern, int d) {
+    public static int approximatePatternCount(String text, String pattern, int d) {
         int count = 0;
 
         for (int i = 0; i < text.length() - pattern.length() + 1; i++) {
@@ -92,6 +94,41 @@ public class HiddenMessages {
         }
 
         return count;
+    }
+
+    // Generates the 1-neighborhood of a string
+    public static String[] immediateNeighbors(String pattern) {
+        List<String> neighborhood = new ArrayList<>();
+        neighborhood.add(pattern);
+
+        for (int i = 0; i < pattern.length(); i++) {
+            char symbol = pattern.charAt(i);
+            for (char x : new char[] { 'A', 'C', 'G', 'T' }) { // Modify this array based on your nucleotide alphabet
+                if (x != symbol) {
+                    String neighbor = pattern.substring(0, i) + x + pattern.substring(i + 1);
+                    neighborhood.add(neighbor);
+                }
+            }
+        }
+
+        return neighborhood.toArray(new String[0]);
+    }
+
+    // Generates the d-neighborhood of a string
+    public static String[] neighbors(String pattern, int d) {
+        List<String> neighborhood = new ArrayList<>();
+        neighborhood.add(pattern);
+
+        for (int i = 1; i <= d; i++) { // Fix the off-by-one error here
+            List<String> newNeighbors = new ArrayList<>();
+            for (String pattern2 : neighborhood) {
+                newNeighbors.addAll(Arrays.asList(immediateNeighbors(pattern2)));
+            }
+            neighborhood.clear();
+            neighborhood.addAll(removeDuplicates(newNeighbors));
+        }
+
+        return neighborhood.toArray(new String[0]);
     }
 
     // Finds the most frequent k-mers in a string
