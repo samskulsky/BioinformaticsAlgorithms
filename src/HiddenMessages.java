@@ -147,6 +147,7 @@ public class HiddenMessages {
         return frequentPatterns.toArray(new String[0]);
     }
 
+    // Finds the most frequent k-mers with at most d mismatches in a string
     public static String[] frequentWordsWithMismatches(String text, int k, int d) {
         List<String> frequentPatterns = new ArrayList<>();
         Map<String, Integer> freqMap = new HashMap<>();
@@ -162,6 +163,50 @@ public class HiddenMessages {
                     freqMap.put(neighbor, 1);
                 } else {
                     freqMap.put(neighbor, freqMap.get(neighbor) + 1);
+                }
+            }
+        }
+
+        int m = maxMap(freqMap);
+
+        for (String pattern : freqMap.keySet()) {
+            if (freqMap.get(pattern) == m) {
+                frequentPatterns.add(pattern);
+            }
+        }
+
+        return frequentPatterns.toArray(new String[0]);
+    }
+
+    // Finds the most frequent k-mers with at most d mismatches and reverse
+    // complements in a string
+    public static String[] frequentWordsWithMismatchesAndReverseComplements(String text, int k, int d) {
+        List<String> frequentPatterns = new ArrayList<>();
+        Map<String, Integer> freqMap = new HashMap<>();
+        int n = text.length();
+
+        for (int i = 0; i < n - k + 1; i++) {
+            String pattern = text.substring(i, i + k);
+            String[] neighborhood = neighbors(pattern, d);
+
+            for (int j = 0; j < neighborhood.length; j++) {
+                String neighbor = neighborhood[j];
+                if (!freqMap.containsKey(neighbor)) {
+                    freqMap.put(neighbor, 1);
+                } else {
+                    freqMap.put(neighbor, freqMap.get(neighbor) + 1);
+                }
+            }
+
+            String reverseComplement = DNAOperations.reverseComplement(pattern);
+            String[] revComplementNeighborhood = neighbors(reverseComplement, d);
+
+            for (int j = 0; j < revComplementNeighborhood.length; j++) {
+                String revComplementNeighbor = revComplementNeighborhood[j];
+                if (!freqMap.containsKey(revComplementNeighbor)) {
+                    freqMap.put(revComplementNeighbor, 1);
+                } else {
+                    freqMap.put(revComplementNeighbor, freqMap.get(revComplementNeighbor) + 1);
                 }
             }
         }
