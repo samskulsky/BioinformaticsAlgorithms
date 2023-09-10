@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,6 +140,36 @@ public class HiddenMessages {
 
         for (String pattern : freqMap.keySet()) {
             if (freqMap.get(pattern) == max) {
+                frequentPatterns.add(pattern);
+            }
+        }
+
+        return frequentPatterns.toArray(new String[0]);
+    }
+
+    public static String[] frequentWordsWithMismatches(String text, int k, int d) {
+        List<String> frequentPatterns = new ArrayList<>();
+        Map<String, Integer> freqMap = new HashMap<>();
+        int n = text.length();
+
+        for (int i = 0; i < n - k + 1; i++) {
+            String pattern = text.substring(i, i + k);
+            String[] neighborhood = neighbors(pattern, d);
+
+            for (int j = 0; j < neighborhood.length; j++) {
+                String neighbor = neighborhood[j];
+                if (!freqMap.containsKey(neighbor)) {
+                    freqMap.put(neighbor, 1);
+                } else {
+                    freqMap.put(neighbor, freqMap.get(neighbor) + 1);
+                }
+            }
+        }
+
+        int m = maxMap(freqMap);
+
+        for (String pattern : freqMap.keySet()) {
+            if (freqMap.get(pattern) == m) {
                 frequentPatterns.add(pattern);
             }
         }
